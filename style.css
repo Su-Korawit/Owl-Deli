@@ -1,4 +1,4 @@
-/* @font-face {
+@font-face {
   font-family: 'HammersmithOne';
   src: url('/font/HammersmithOne-Regular.ttf') format('truetype');
   font-weight: normal;
@@ -106,7 +106,7 @@
   src: url('Kanit-Thin.ttf') format('truetype');
   font-weight: 100;
   font-style: normal;
-} */
+}
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ThinItalic.ttf') format('truetype');
@@ -133,14 +133,14 @@ body {
 } */
 
 #btn-rpc-add-order {
-  display: none;
+  /* display: none; */
   border: #E4B808 solid 5px;
   border-radius: 32px;
   font-size: 26px;
 }
 
 #btn-rpc-recive-order {
-  /* display: none; */
+  display: none;
   border: #E5E4E1 solid 5px;
   color: #ffffff;
   padding: 0px 10px;
@@ -492,6 +492,7 @@ main input {
     }
 
     input {
+      text-align: center;
       padding: 8px 0px;
     }
 
