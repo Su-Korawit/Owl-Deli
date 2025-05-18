@@ -5,7 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 // import { getAuth } from "firebase/auth";
 
 // กำหนด config ของ Firebase
@@ -66,19 +66,6 @@ logoutBtn.addEventListener('click', async (e) => {
     }
 });
 
-// // ตรวจสอบสถานะผู้ใช้เมื่อโหลดหน้า
-// auth.onAuthStateChanged((user) => {
-//     if (user) {
-//         userInfo.textContent = `Hello, ${user.displayName} (${user.email})`;
-//         loginBtn.style.display = 'none';
-//         logoutBtn.style.display = 'inline-block';
-//     } else {
-//         userInfo.textContent = '';
-//         loginBtn.style.display = 'inline-block';
-//         logoutBtn.style.display = 'none';
-//     }
-// });
-
 let currentUser = null;
 
 onAuthStateChanged(auth, (user) => {
@@ -107,7 +94,7 @@ document.getElementById('btn-add-order').addEventListener('click', async (e) => 
 });
 
 document.getElementById("btn-rpc-add-order").addEventListener("click", async function (e) {
-    e.preventDefault(); // ป้องกันการรีเฟรช
+    e.preventDefault();
 
     const details = document.getElementById("rpc-details").value;
     const startLocation = document.getElementById("slocations").value;
@@ -118,7 +105,7 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
     const payment = document.querySelector('input[name="payment"]:checked')?.value || "unknown";
 
     const username = currentUser.displayName || currentUser.email || currentUser.uid;
-    const delivery_name = '???'; // ใส่คนรับงานเริ่มต้น
+    const delivery_name = "???"; // เริ่มต้นยังไม่มีคนรับงาน
     const status = "waiting";
 
     try {
@@ -136,55 +123,130 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
             created_at: new Date(),
         });
 
-        // alert("Order added! ID: " + docRef.id);
         boardPage.style.display = 'block';
         postPage.style.display = 'none';
+
+        loadOrders(); // โหลดออเดอร์ใหม่หลังเพิ่ม
     } catch (error) {
         console.error("Error adding order: ", error);
         alert("Error adding order: " + error.message);
     }
-
-    location.reload();
 });
 
 async function loadOrders() {
     console.log("loadOrders function called");
     const container = document.getElementById("orders-container");
+    container.innerHTML = ""; // เคลียร์ของเก่าก่อน
+
     const querySnapshot = await getDocs(collection(db, "orders"));
 
     querySnapshot.forEach((doc) => {
         const data = doc.data();
 
+        let cardClass = "post-card order-new";
+        if (data.status === "in_process") cardClass = "post-card order-old";
+        else if (data.status === "succeeded") cardClass = "post-card order-succeeded";
+
         const card = document.createElement("div");
-        card.className = "post-card order-new";
-        card.innerHTML = `
-      <div class="post-card-header">
-        <span id="deliver-name">${data.delivery_name || "???"}</span> to <span id="reciver-name">${data.username || "???"}</span>
-      </div>
+        card.className = cardClass;
 
-      <div class="post-card-price">
-        <p>Price: <span id="full-price">${data.price || "0"}</span>฿</p>
-        <p>, You'll get: <span id="deliver-price">${data.cost || "0"}</span>฿-</p>
-      </div>
-
-      <div class="post-card-content">
-        <p>Details: <span id="reciver-details">${data.details || "-"}</span></p>
-        <p>Address: <span id="address-start">${data.from || "-"}</span></p>
-        <p>To Address: <span id="address-goal">${data.to || "-"}</span></p>
-      </div>
-
-      <div class="post-card-footer">
-        <p>ID: <span id="post-card-id">${doc.id.substring(0, 4)}</span></p>
-        <div class="post-card-feature">
-          <a href="#" class="btn btn-red">Cancel</a>
-          <a href="#" class="btn btn-green">Deliver This</a>
-        </div>
-      </div>
+        let featureButtons = "";
+        if (data.status === "waiting") {
+            featureButtons = `
+      <a href="#" class="btn btn-red btn-cancel" data-id="${doc.id}">Cancel</a>
+      <a href="#" class="btn btn-green btn-deliver" data-id="${doc.id}">Deliver This</a>
     `;
+        } else if (data.status === "in_process") {
+            let succeedBtnHtml = "";
+            if (data.delivery_name === currentUser.displayName) {
+                succeedBtnHtml = `<a href="#" class="btn btn-green btn-succeed" data-id="${doc.id}">Succeeded</a>`;
+            }
+            featureButtons = `
+      <a href="#" class="btn btn-process">In Process</a>
+      ${succeedBtnHtml}
+    `;
+        } else if (data.status === "succeeded") {
+            featureButtons = `<p>Order Completed</p>`;
+        }
+
+        card.innerHTML = `
+    <div class="post-card-header">
+      <span class="deliver-name">${data.delivery_name || "???"}</span> to <span class="reciver-name">${data.username || "???"}</span>
+    </div>
+
+    <div class="post-card-price">
+      <p>Price: <span class="full-price">${data.price || "0"}</span>฿</p>
+      <p>, You'll get: <span class="deliver-price">${data.cost || "0"}</span>฿-</p>
+    </div>
+
+    <div class="post-card-content">
+      <p>Details: <span class="reciver-details">${data.details || "-"}</span></p>
+      <p>Address: <span class="address-start">${data.from || "-"}</span></p>
+      <p>To Address: <span class="address-goal">${data.to || "-"}</span></p>
+    </div>
+
+    <div class="post-card-footer">
+      <p>ID: <span class="post-card-id">${doc.id.substring(0, 4)}</span></p>
+      <div class="post-card-feature">
+        ${featureButtons}
+      </div>
+    </div>
+  `;
+
         container.appendChild(card);
     });
 
+    // เพิ่ม event listener ให้ปุ่ม Cancel
+    document.querySelectorAll(".btn-cancel").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const id = e.target.dataset.id;
+            if (confirm("Are you sure to cancel this order?")) {
+                console.log(id);
+                await deleteDoc(doc(db, "orders", id));
+                loadOrders();
+            }
+        });
+    });
+
+    // เพิ่ม event listener ให้ปุ่ม Deliver This
+    document.querySelectorAll(".btn-deliver").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const id = e.target.dataset.id;
+            await updateDoc(doc(db, "orders", id), {
+                status: "in_process",
+                delivery_name: currentUser.displayName || currentUser.email || currentUser.uid
+            });
+            loadOrders();
+        });
+    });
+
+    // เพิ่ม event listener ให้ปุ่ม Succeeded
+    document.querySelectorAll(".btn-succeed").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const id = e.target.dataset.id;
+
+            const orderRef = doc(db, "orders", id);
+            const orderSnap = await getDoc(orderRef);
+            if (!orderSnap.exists()) return;
+
+            const orderData = orderSnap.data();
+
+            // ย้ายข้อมูลไป collection ใหม่
+            await setDoc(doc(db, "completed_orders", id), {
+                ...orderData,
+                status: "succeeded",
+                completed_at: new Date(),
+            });
+
+            // ลบออกจาก collection เดิม
+            await deleteDoc(orderRef);
+            loadOrders();
+        });
+    });
 }
 
-// เรียกเมื่อโหลดหน้า
+// โหลดตอนเริ่มหน้า
 loadOrders();
