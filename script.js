@@ -66,18 +66,18 @@ logoutBtn.addEventListener('click', async (e) => {
     }
 });
 
-// ตรวจสอบสถานะผู้ใช้เมื่อโหลดหน้า
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        userInfo.textContent = `Hello, ${user.displayName} (${user.email})`;
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
-    } else {
-        userInfo.textContent = '';
-        loginBtn.style.display = 'inline-block';
-        logoutBtn.style.display = 'none';
-    }
-});
+// // ตรวจสอบสถานะผู้ใช้เมื่อโหลดหน้า
+// auth.onAuthStateChanged((user) => {
+//     if (user) {
+//         userInfo.textContent = `Hello, ${user.displayName} (${user.email})`;
+//         loginBtn.style.display = 'none';
+//         logoutBtn.style.display = 'inline-block';
+//     } else {
+//         userInfo.textContent = '';
+//         loginBtn.style.display = 'inline-block';
+//         logoutBtn.style.display = 'none';
+//     }
+// });
 
 let currentUser = null;
 
