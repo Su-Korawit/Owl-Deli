@@ -5,7 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 // import { getAuth } from "firebase/auth";
 
 // กำหนด config ของ Firebase
@@ -118,7 +118,7 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
     const payment = document.querySelector('input[name="payment"]:checked')?.value || "unknown";
 
     const username = currentUser.displayName || currentUser.email || currentUser.uid;
-    const delivery_name = 'unknow'; // ใส่คนรับงานเริ่มต้น
+    const delivery_name = '???'; // ใส่คนรับงานเริ่มต้น
     const status = "waiting";
 
     try {
@@ -143,5 +143,48 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
         console.error("Error adding order: ", error);
         alert("Error adding order: " + error.message);
     }
+
+    location.reload();
 });
 
+async function loadOrders() {
+    console.log("loadOrders function called");
+    const container = document.getElementById("orders-container");
+    const querySnapshot = await getDocs(collection(db, "orders"));
+
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const card = document.createElement("div");
+        card.className = "post-card order-new";
+        card.innerHTML = `
+      <div class="post-card-header">
+        <span id="deliver-name">${data.delivery_name || "???"}</span> to <span id="reciver-name">${data.username || "???"}</span>
+      </div>
+
+      <div class="post-card-price">
+        <p>Price: <span id="full-price">${data.price || "0"}</span>฿</p>
+        <p>, You'll get: <span id="deliver-price">${data.cost || "0"}</span>฿-</p>
+      </div>
+
+      <div class="post-card-content">
+        <p>Details: <span id="reciver-details">${data.details || "-"}</span></p>
+        <p>Address: <span id="address-start">${data.from || "-"}</span></p>
+        <p>To Address: <span id="address-goal">${data.to || "-"}</span></p>
+      </div>
+
+      <div class="post-card-footer">
+        <p>ID: <span id="post-card-id">${doc.id.substring(0, 4)}</span></p>
+        <div class="post-card-feature">
+          <a href="#" class="btn btn-red">Cancel</a>
+          <a href="#" class="btn btn-green">Deliver This</a>
+        </div>
+      </div>
+    `;
+        container.appendChild(card);
+    });
+
+}
+
+// เรียกเมื่อโหลดหน้า
+loadOrders();
