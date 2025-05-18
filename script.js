@@ -105,7 +105,7 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
     const payment = document.querySelector('input[name="payment"]:checked')?.value || "unknown";
 
     const username = currentUser.displayName || currentUser.email || currentUser.uid;
-    const delivery_name = "???"; // เริ่มต้นยังไม่มีคนรับงาน
+    const delivery_name = "???";
     const status = "waiting";
 
     try {
@@ -126,7 +126,7 @@ document.getElementById("btn-rpc-add-order").addEventListener("click", async fun
         boardPage.style.display = 'block';
         postPage.style.display = 'none';
 
-        loadOrders(); // โหลดออเดอร์ใหม่หลังเพิ่ม
+        location.reload();
     } catch (error) {
         console.error("Error adding order: ", error);
         alert("Error adding order: " + error.message);
@@ -158,7 +158,7 @@ async function loadOrders() {
     `;
         } else if (data.status === "in_process") {
             let succeedBtnHtml = "";
-            if (data.delivery_name === currentUser.displayName) {
+            if (data.username === currentUser.displayName) {
                 succeedBtnHtml = `<a href="#" class="btn btn-green btn-succeed" data-id="${doc.id}">Succeeded</a>`;
             }
             featureButtons = `
@@ -205,6 +205,7 @@ async function loadOrders() {
                 console.log(id);
                 await deleteDoc(doc(db, "orders", id));
                 loadOrders();
+                location.reload();
             }
         });
     });
@@ -219,6 +220,7 @@ async function loadOrders() {
                 delivery_name: currentUser.displayName || currentUser.email || currentUser.uid
             });
             loadOrders();
+            location.reload();
         });
     });
 
@@ -244,6 +246,7 @@ async function loadOrders() {
             // ลบออกจาก collection เดิม
             await deleteDoc(orderRef);
             loadOrders();
+            location.reload();
         });
     });
 }
