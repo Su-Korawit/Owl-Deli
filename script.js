@@ -8,7 +8,6 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/fi
 import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 // import { getAuth } from "firebase/auth";
 
-// กำหนด config ของ Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA7aFm5MhmdQCEvk0L0itzGVZtgYbi6g8o",
     authDomain: "owl-deli.firebaseapp.com",
@@ -44,7 +43,7 @@ loginBtn.addEventListener('click', async (e) => {
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        userInfo.textContent = `Hello, ${user.displayName} (${user.email})`;
+        userInfo.textContent = `*Hello, ${user.displayName} (${user.email})`;
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
     } catch (error) {

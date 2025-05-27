@@ -11,102 +11,119 @@
   font-weight: 900;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-BlackItalic.ttf') format('truetype');
   font-weight: 900;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-BoldItalic.ttf') format('truetype');
   font-weight: 700;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ExtraBold.ttf') format('truetype');
   font-weight: 800;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ExtraBoldItalic.ttf') format('truetype');
   font-weight: 800;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ExtraLight.ttf') format('truetype');
   font-weight: 200;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ExtraLightItalic.ttf') format('truetype');
   font-weight: 200;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-LightItalic.ttf') format('truetype');
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-SemiBoldItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-Thin.ttf') format('truetype');
   font-weight: 100;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Kanit';
   src: url('Kanit-ThinItalic.ttf') format('truetype');
@@ -266,7 +283,7 @@ main {
 }
 
 input {
-  font-family: 'HammersmithOne', sans-serif;
+  font-family: 'HammersmithOne', 'Kanit', sans-serif;
   font-size: 18px;
 }
 
@@ -485,6 +502,7 @@ main input {
 
     input,
     select {
+      font-family: 'Kanit';
       width: 90%;
       font-size: 18px;
       border-radius: 16px;
@@ -534,6 +552,7 @@ main input {
     .rpc-co-css input[type="radio"] {
       display: none;
     }
+
     .rpc-co-css input[type="radio"]:checked+label {
       border-color: #00aaff;
       background-color: #e0f7ff;
@@ -573,9 +592,9 @@ main input {
     main {
         padding: 0 100px;
     }
-}
+} 
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     nav {
         flex-direction: column;
         align-items: flex-start;
@@ -603,20 +622,205 @@ main input {
     body {
         font-size: 24px;
     }
+}  */
+
+@media only screen and (min-width: 500px) {
+  body {
+    font-size: 50px;
+    p {
+      font-size: 50px !important;
+    }
+  }
+
+  .banner-notifiaction {
+    height: 150px;
+
+
+    img {
+      /* display: none; */
+      height: 150px;
+    }
+
+    .notifiaction-text {
+      font-size: 50px;
+    }
+  }
+
+  nav {
+    padding: 0px 10px;
+
+    .img-logo {
+      height: 150px;
+    }
+
+    .nav-feature {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #btn-lang {
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      color: #000000;
+      font-size: 50px;
+    }
+  }
+
+  .btn {
+    padding: 10px 12px;
+    font-size: 50px;
+    border-radius: 32px;
+  }
+
+  main {
+    padding: 200px 50px 70% 50px;
+  }
+
+  main .main-text {
+    font-size: 70px;
+  }
+
+  input {
+    font-size: 50px;
+  }
+
+  main input {
+    padding: 10px;
+    margin-bottom: 50px;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #000;
+  }
+
+  .footer-content-header {
+    padding: 10px 50px;
+    height: 77px;
+    width: 100%;
+  }
+
+
+  .footer-content {
+    
+    padding: 0px 53px;
+    box-sizing: border-box;
+    
+    .qaf-type-container {
+      display: flex;
+      flex-direction: column;
+      align-items: top;
+      justify-content: space-between;
+      margin-top: 50px;
+      border-top: 3px solid #ccc;
+      /* width: 100%; */
+
+      .qaf-type-item {
+        width: 100%;
+        text-align: center;
+        align-items: center;
+
+        .qaf-type-head {
+          text-align: center;
+          width: 200px;
+          padding: 10px 16px;
+          color: #ffffff;
+          background-color: #403A3A;
+          border-radius: 16px;
+        }
+
+        img {
+          height: 500px;
+        }
+      }
+    }
+  }
+
+
+  .post-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 0px 100px;
+    box-sizing: border-box;
+    /* background-color: #EDECE6; */
+    background-color: #ffffff;
+    width: 100%;
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      margin-top: 40px;
+      width: 100%;
+
+      .post-card-header {
+        font-size: 30px;
+        /* border: #ffffff 3px solid; */
+        border: #EDECE6 3px solid;
+        border-radius: 16px 16px 0px 0px;
+        padding: 0px 10px;
+      }
+
+      #deliver-name {
+        color: #EBC424;
+      }
+
+      #reciver-name {
+        color: #aa179d;
+      }
+
+      .post-card-price {
+        display: flex;
+        margin: -15px 0px;
+        align-items: center;
+        justify-content: right;
+        /* border: #ffffff 3px solid; */
+        border: #EDECE6 3px solid;
+        border-top: none;
+        padding: 0px 10px;
+      }
+
+      #full-price {
+        color: #aa179d;
+      }
+
+      #deliver-price {
+        color: #5CDA4C;
+      }
+
+      .post-card-content {
+        /* border: #ffffff 3px solid; */
+        border: #EDECE6 3px solid;
+        border-bottom: none;
+        border-top: none;
+        padding-left: 10px;
+
+      }
+
+      .post-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        /* border: #ffffff 3px solid; */
+        border: #EDECE6 3px solid;
+        border-radius: 0px 0px 16px 16px;
+        padding: 0px 10px;
+      }
+    }
+
+    .order-new {
+      .post-card-content {
+        background-color: #F4CBDA;
+      }
+    }
+
+    .order-old {
+      .post-card-content {
+        background-color: #F6E7AC;
+      }
+    }
+  }
 }
-
-@media (max-width: 480px) {
-    main input {
-        width: 100%;
-    }
-
-    main button {
-        width: 100%;
-        font-size: 16px;
-    }
-
-    .auth-feture button {
-        width: 100%;
-        font-size: 16px;
-    }
-} */
